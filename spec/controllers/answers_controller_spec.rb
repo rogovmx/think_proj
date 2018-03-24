@@ -2,55 +2,42 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
-  let(:answer) { question.answers.create(attributes_for(:answer)) }
-
-  describe 'GET #new' do
-    before { get :new, params: {  question_id: question.id } }
-
-    it 'assigns appropriate @question variable to make new answer' do
-      expect(assigns(:question)).to eq question
-    end
-
-    it 'assigns new Answer to @answer variable' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'is associated with @question' do
-      expect(assigns(:answer).question).to eq question
-    end
-
-    it 'render new view' do
-      expect(response).to render_template :new
-    end
-  end
+  let!(:answer) { create(:answer) }
+  sign_in_user
 
   describe 'POST #create' do
     let(:valid_answer_action) do
       post :create, params: { question_id: question, answer: attributes_for(:answer) }
     end
     let(:invalid_answer_action) do
-      post :create, params: { question_id: question, answer: attributes_for(:invalid_answer) }
+      post :create, params: { question_id: question, answer: {body: nil} }
     end
 
     context 'with valid attributes' do
       it 'saves new answer in DB' do
-        expect { valid_answer_action }.to change(question.answers, :count).by(1)
+        expect { valid_answer_action }.to change(Answer, :count).by(1)
       end
 
       it 'redirects to matching question' do
         valid_answer_action
         expect(response).to redirect_to question
       end
+    
+      it 'associates current user with answer' do
+        valid_answer_action
+        expect(assigns(:answer).user_id).to eq @user.id
+      end    
     end
 
     context 'with invalid attributes' do
       it 'doesnt save invalid answer to DB' do
+        question
         expect { invalid_answer_action }.not_to change(Answer, :count)
       end
 
       it 'renders the new view' do
         invalid_answer_action
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end
@@ -78,26 +65,44 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'doesnt update answer' do
         answer.reload
-        expect(answer.body).to eq 'MyText'
+        expect(answer.body).to eq answer.body
       end
 
       it 're-renders edit view' do
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end
-
-  describe 'DELETE #destroy' do
+ 
+  describe 'DELETE #delete' do
     before { answer }
     
-    it 'deletes the answer' do
-      expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
-    end
+    let(:delete_action) { delete :destroy, params: { question_id: answer.question.id, id: answer } }
+    
+    context 'deletes if request from the author' do 
+      before { sign_in answer.user }
+      
+      it 'deletes the answer' do
+        expect { delete_action }.to change(Answer, :count).by(-1)
+      end
 
-    it 'redirects to question' do
-      delete :destroy, params: { question_id: question, id: answer }
-      expect(response).to redirect_to question
+      it 'redirects to question' do
+        delete_action
+        expect(response).to redirect_to answer.question
+      end
     end
-end  
+    
+    context 'try to delete from not author' do
+      it 'does not delete answer' do
+        expect { delete_action }.not_to change(Answer, :count)
+      end
+      
+      it 'redirects to question' do
+        delete_action
+        expect(response).to redirect_to answer.question
+      end
+    end 
+  end
+  
 
 end

@@ -1,0 +1,7 @@
+= render 'questions/errors', resource: answer
+= form_for [question, answer] do |f|
+  = f.label :body, 'Answer:'
+  br
+  = f.text_area :body
+  br
+  = f.submit 'Post your answer'

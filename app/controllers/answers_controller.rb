@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_question, only: [:new, :create, :update, :destroy]
   before_action :set_answer, only: [:update, :edit, :destroy]
 
@@ -11,23 +12,29 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.new(answer_params)
+    @answer.user = current_user
     if @answer.save
-      redirect_to @question
+      redirect_to @question, notice: "Your answer have been successfully added"
     else
-      render :new
+      render 'questions/show'
     end
   end
 
   def update
     if @answer.update(answer_params)
-      redirect_to @question
+      redirect_to @question, notice: "Your answer have been successfully updated"
     else
-      render :new
+      render 'questions/show'
     end
   end
 
   def destroy
-    @answer.destroy
+    if current_user.author_of?(@answer)
+     @answer.destroy
+     flash[:notice] = "Answer deleted"
+    else 
+     flash[:alert] = "No access to delete this answer"
+    end
     redirect_to @question
   end
 
