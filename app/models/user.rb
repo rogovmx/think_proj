@@ -10,8 +10,8 @@ class User < ApplicationRecord
   validates :email, :password, presence: true
   
   
-  def author_of?(relation)  
-    id == relation.try(:user_id)
+  def author_of?(resource)  
+    id == resource.try(:user_id)
   end
   
 end

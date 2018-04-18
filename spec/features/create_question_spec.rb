@@ -17,7 +17,8 @@ feature 'user sign in', %q{
     fill_in 'Body', with: 'question text'
     click_on 'Create'
 
-    expect(page).to have_content 'Your question successfully added'
+    expect(page).to have_content 'Test question'
+    expect(page).to have_content 'question text'
   end
 
   scenario 'Non-auth user tries to create question' do
@@ -36,6 +37,6 @@ feature 'user sign in', %q{
     fill_in 'Body', with: nil
     click_on 'Create question'
     
-    expect(page).to have_content('Form Errors')
-end  
+    expect(page).to have_content "Title can't be blank"
+  end  
 end

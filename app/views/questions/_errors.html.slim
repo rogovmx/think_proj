@@ -1,10 +1,4 @@
 - if resource.errors.any?
   #error_explanation
-    h2
-      => t('common.form_errors')
-      = t("activerecord.models.#{resource.model_name.singular}")
-      br
-      = t('common.retry_prompt')
-    ul
-      - resource.errors.full_messages.each do |message|
-        li = message
+    - resource.errors.full_messages.each do |message|
+      p = message

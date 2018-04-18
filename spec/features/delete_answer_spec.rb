@@ -16,7 +16,7 @@ feature 'delete answer', %q{
       delete_action
       
       expect(page).not_to have_content(@answer.body)
-      expect(page).to have_content('Answer deleted')
+      expect(page).to have_content 'Answer deleted'
     end
     
     scenario 'only author sees delete button' do
@@ -25,7 +25,7 @@ feature 'delete answer', %q{
       sign_in(@user)
       visit question_path(@answer.question)
       
-      expect(page).to_not have_content('Delete answer')
+      expect(page).to_not have_content 'Delete answer'
     end
   end
   
@@ -34,7 +34,7 @@ feature 'delete answer', %q{
       @answer = create(:answer)
       visit question_path(@answer.question)
       
-      expect(page).not_to have_content('Delete answer')
+      expect(page).not_to have_content 'Delete answer'
     end
   end
   

@@ -15,7 +15,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'saves new answer in DB' do
-        expect { valid_answer_action }.to change(Answer, :count).by(1)
+        expect { valid_answer_action }.to change(question.answers, :count).by(1)
       end
 
       it 'redirects to matching question' do

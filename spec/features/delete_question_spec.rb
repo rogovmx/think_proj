@@ -6,7 +6,7 @@ feature 'delete question', %q{
   
   let(:delete_action) do
     visit question_path(@question)
-    click_on('Delete question')
+    click_on 'Delete question'
   end
   
   before { @question = create(:question) }  
@@ -18,7 +18,7 @@ feature 'delete question', %q{
       delete_action  
       
       expect(page).not_to have_content(@question.body)
-      expect(page).to have_content('Question deleted')
+      expect(page).to have_content 'Question deleted'
     end
     
     scenario 'only author can see delete button' do
@@ -26,7 +26,7 @@ feature 'delete question', %q{
       sign_in(@user)
       visit question_path(@question)
       
-      expect(page).not_to have_content('Delete question')    
+      expect(page).not_to have_content 'Delete question'
     end
   end
   
@@ -35,7 +35,7 @@ feature 'delete question', %q{
       @question = create(:question)
       visit question_path(@question)
       
-      expect(page).not_to have_content('Delete question')
+      expect(page).not_to have_content 'Delete question'
     end
   end
 end
