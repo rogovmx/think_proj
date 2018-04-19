@@ -7,17 +7,14 @@ RSpec.describe User, type: :model do
   
   let(:question) {create(:question)}
   let(:another_question) {create(:question)}
-  
-  before do 
-    @user = question.user  
-  end
+  let(:user) { question.user }
   
   it 'has appropriate author_of? method (true condition)' do
-    expect(@user).to be_author_of(question)
+    expect(user).to be_author_of(question)
   end  
   
   it 'has appropriate author_of? method (false condition)' do
-    expect(@user).not_to be_author_of(another_question)
+    expect(user).not_to be_author_of(another_question)
   end 
   
 end
