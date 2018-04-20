@@ -7,10 +7,10 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     let(:valid_answer_action) do
-      post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
     end
     let(:invalid_answer_action) do
-      post :create, params: { question_id: question, answer: {body: nil} }
+      post :create, params: { question_id: question, answer: {body: nil}, format: :js }
     end
 
     context 'with valid attributes' do
@@ -18,9 +18,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { valid_answer_action }.to change(question.answers, :count).by(1)
       end
 
-      it 'redirects to matching question' do
+      it 'render question' do
         valid_answer_action
-        expect(response).to redirect_to question
+        expect(response).to render_template 'create'
       end
     
       it 'associates current user with answer' do
@@ -35,9 +35,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { invalid_answer_action }.not_to change(Answer, :count)
       end
 
-      it 'renders the new view' do
+      it 'renders temporary error handler' do
         invalid_answer_action
-        expect(response).to render_template 'questions/show'
+        expect(response).to render_template 'create'
       end
     end
   end

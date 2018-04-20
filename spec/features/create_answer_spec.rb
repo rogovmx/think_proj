@@ -1,31 +1,37 @@
 require 'rails_helper'
 
-feature 'create answer', %q{
-  User can create answer while in question page
-} do 
+feature 'User answer', %q{
+  In order to exchange my knowledge
+  As an authenticated user
+  I wanna be able to create answers
+} do
   
-  scenario 'authenticated user creates the answer' do
-    question = create(:question)
-    sign_in(question.user)
+  given(:user) { create(:user) }
+  given(:question) { create(:question) }
+  
+  scenario 'authenticated user creates the answer', js: true do
+    sign_in(user)
     visit question_path(question)
+    
     fill_in 'Answer:', with: 'My test answer'
     click_on 'Post your answer'
     
-    expect(page).to have_content 'Your answer have been successfully added'
-    expect(page).to have_content 'My test answer'
     expect(current_path).to eq question_path(question)
+    within '.answers' do
+      expect(page).to have_content 'My test answer'
+    end  
   end
   
-  scenario 'unauthenticated user tries to create the answer' do
+  scenario 'unauthenticated user tries to create the answer', js: true do
     question = create(:question)
     visit question_path(question)
     fill_in 'Answer:', with: 'My test answer'
     click_on 'Post your answer'
     
-    expect(page).to have_content('You need to sign in or sign up before continuing.')
-  end
+    expect(page).to_not have_content 'My test answer'
+  end  
   
-  scenario 'authenticated user creates the invalid answer' do
+  scenario 'authenticated user creates the invalid answer', js: true do
     question = create(:question)
     sign_in(question.user)
     visit question_path(question)
@@ -33,6 +39,6 @@ feature 'create answer', %q{
     click_on 'Post your answer'
     
     expect(page).to have_content 'Body is too short'
-  end
-  
+  end  
 end
+  

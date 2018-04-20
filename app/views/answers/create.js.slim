@@ -1,0 +1,7 @@
+- if @answer.errors.any?
+  | $('#errors').html("#{j render 'questions/errors', resource: @answer}" );
+- else
+  | $('#errors').html('') ;
+  | $('.answers').append('#{j render "answer"}');
+  | $('#answer_body').val('');
+ 
