@@ -1,5 +1,5 @@
 p
-  = @answer.body
-  -if current_user&.author_of?(@answer)
-    = link_to 'Delete answer', [@question, @answer], method: :delete
+  = answer.body
+  -if current_user&.author_of?(answer)
+    = link_to 'Delete answer', [answer.question, answer], method: :delete
 

@@ -6,7 +6,7 @@ p
     = link_to 'Delete question', question_path(@question), method: :delete
 
 h1 Answers
-.answers = render 'answers'
+.answers = render @question.answers
 
 = render 'answers/answer_form', question: @question, answer: @answer || @question.answers.new
 

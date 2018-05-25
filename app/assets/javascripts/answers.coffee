@@ -12,5 +12,4 @@ ready = ->
 
   #  Здесь могут быть другие обработчики событий и прочий код
  
-$(document).ready(ready) # "вешаем" функцию ready на событие document.ready
 $(document).on('turbolinks:load', ready)  # "вешаем" функцию ready на событие turbolinks:load
