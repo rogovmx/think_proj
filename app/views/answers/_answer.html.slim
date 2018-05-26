@@ -1,5 +1,15 @@
-p
-  = answer.body
-  -if current_user&.author_of?(answer)
-    = link_to 'Delete answer', [answer.question, answer], method: :delete
-
+- if answer.persisted?
+  .answer(id="answer-#{answer.id}")
+    = 'BEST' if answer.best?
+    p.answer-body = answer.body
+    - if current_user&.author_of?(answer.question) && !answer.best
+      = link_to 'set best', set_best_answer_path(answer), method: :patch, id: 'select-as-best-link', remote: true
+    - if current_user&.author_of?(answer)
+      = link_to 'Delete answer', answer, method: :delete, remote: true
+      = link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      
+      = form_for answer, remote: true, html: { id: "edit-answer-form-#{answer.id}"} do |f|
+        = f.label :body, 'Edit your answer:'
+        = f .text_area :body
+        = f.submit 'Save'
+    = answer.user.email    

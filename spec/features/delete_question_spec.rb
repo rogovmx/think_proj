@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'features_helper'
 
 feature 'delete question', %q{
   only author can delete his question
@@ -18,7 +18,6 @@ feature 'delete question', %q{
       delete_action  
       
       expect(page).not_to have_content(@question.body)
-      expect(page).to have_content 'Question deleted'
     end
     
     scenario 'only author can see delete button' do

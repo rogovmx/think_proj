@@ -1,0 +1,9 @@
+<% if @answer.errors.any? %>
+  $('#errors').html("<%= j render 'questions/errors', resource: @answer %>" );
+<% else %>
+  $('#errors').html('');
+  var answer_id = <%= @answer.id %>;
+  $('form#edit-answer-form-' + answer_id).hide();
+  $('*[data-answer-id="'+answer_id+'"]').show();
+  $('#answer-' + answer_id).children('.answer-body').text('<%= j @answer.body %>');
+<% end %>

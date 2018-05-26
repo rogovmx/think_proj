@@ -1,15 +1,9 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
-# Объявляем функцию ready, внутри которой можно поместить обработчики событий и другой код, который должен выполняться при загрузке страницы
 ready = ->
-  # Это наш обработчик, перенесенный сюда из docuement.ready ($ ->)
-  $('.edit-answer-link').click (e) -> 
-    e.preventDefault();
-    $(this).hide();
-    answer_id = $(this).data('answerId')
-    $('form#edit-answer-' + answer_id).show()
+  $('.answers').on 'click', '.edit-answer-link', (e) ->
+    e.preventDefault()
+    $(this).hide()
+    answer_id = $(this).data 'answerId'
+    $('form#edit-answer-form-' + answer_id).show()
 
-  #  Здесь могут быть другие обработчики событий и прочий код
  
 $(document).on('turbolinks:load', ready)  # "вешаем" функцию ready на событие turbolinks:load

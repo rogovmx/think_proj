@@ -1,9 +1,7 @@
-require 'rails_helper'
+require_relative 'features_helper'
 
-feature 'User answer', %q{
-  In order to exchange my knowledge
-  As an authenticated user
-  I wanna be able to create answers
+feature 'Create answer', %q{
+  User can create answer while in question page
 } do
   
   given(:user) { create(:user) }
@@ -23,7 +21,7 @@ feature 'User answer', %q{
   end
   
   scenario 'unauthenticated user tries to create the answer', js: true do
-    question = create(:question)
+#    question = create(:question)
     visit question_path(question)
     fill_in 'Answer:', with: 'My test answer'
     click_on 'Post your answer'
@@ -32,7 +30,6 @@ feature 'User answer', %q{
   end  
   
   scenario 'authenticated user creates the invalid answer', js: true do
-    question = create(:question)
     sign_in(question.user)
     visit question_path(question)
     fill_in 'Answer:', with: 'My'

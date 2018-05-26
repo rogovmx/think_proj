@@ -7,17 +7,13 @@ class QuestionsController < ApplicationController
   end
   
   def show
-    @answer = @question.answers.build
     @answers = @question.answers
   end
   
   def new
     @question = current_user.questions.new
   end
-  
-  def edit
-  end
-  
+
   def create
     @question = current_user.questions.new(question_params)
     if @question.save
@@ -28,11 +24,11 @@ class QuestionsController < ApplicationController
   end
   
   def update
-    if @question.update(question_params)
-      redirect_to @question
+    if current_user.author_of?(@question)
+      @question.update(question_params)
     else
-      render :edit
-    end  
+      @question.errors.add(:base, message: 'Cannot edit question if not author')
+    end
   end
   
   def destroy

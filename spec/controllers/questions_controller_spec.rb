@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:question) { create(:question_with_answers) }
+  let(:valid_attributes) { attributes_for(:question) }
+  let(:invalid_attributes) { attributes_for(:invalid_question) }  
   let(:user) { question.user }
   
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 2) }
-    
+    let(:questions) { create_list(:question, 3) }
+   
     before { get :index }
     
     it 'populates an array of all questions' do
@@ -25,9 +27,15 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to eq question
     end
     
-    it 'assigns new answer to question' do
-      expect(assigns(:answer)).to be_a_new(Answer)
+    it 'assigns to @answers variable appropriate answers' do
+      expect(assigns(:answers)).to eq question.answers
     end
+    
+    it 'sorts the best answer first' do
+      question.answers[2].set_best 
+      
+      expect(assigns(:answers).first.best).to eq true
+    end  
     
     it 'renders show view' do
       expect(response).to render_template :show
@@ -47,21 +55,7 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to render_template :new
     end
   end
-  
-  describe 'GET #edit' do    
-    sign_in_user
-    
-    before { get :edit, params: { id: question } }
-    
-    it 'assigns the requested question to @question' do
-      expect(assigns(:question)).to eq question
-    end
-    
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-  
+   
   describe 'POST #create' do    
     sign_in_user
     
@@ -94,40 +88,75 @@ RSpec.describe QuestionsController, type: :controller do
   end
   
   describe 'PATCH #update' do 
-    sign_in_user
-    
-    context 'valid attributes' do
-      it 'assigns the requested question to @question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-        expect(assigns(:question)).to eq question
-      end
-      
-      it 'changes question attributes' do
-        patch :update, params: { id: question, question: { title: 'new_title', body: 'new_body' } }
-        question.reload
-        expect(question.title).to eq 'new_title'
-        expect(question.body).to eq 'new_body'
-      end
-      
-      it 'redirects to the updated questioin' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-        expect(response).to redirect_to question
-      end
+    let(:update_action) do
+      patch :update, params: { id: question, question: { title: 'updated title', body: 'updated body' }, format: :js }
     end
-    
-    context 'invalid attributes' do
-      before { patch :update, params: { id: question, question: { title: 'new_title', body: nil } } }
+
+    context 'logged in user' do
+      before { sign_in question.user }
+
+      describe 'update with valid attributes' do
+        before { update_action }
+        
+        it 'assigns to @question appropriate question' do
+          expect(assigns(:question)).to eq question
+        end
+
+        it 'changes question with given attributes' do
+          question.reload
+          expect(question.title).to eq('updated title')
+          expect(question.body).to eq('updated body')
+        end
+
+        it 'renders update template' do
+          expect(response).to render_template 'update'
+        end
+      end
+  
+      describe 'update with invalid attributes' do
+        before { patch :update, params: { id: question, question: invalid_attributes, format: :js } }
+
+        it 'does not update question title with invalid attributes' do
+          question.reload
+          expect(question.title).to eq question.title
+        end
+        
+        it 'does not update question body with invalid attributes' do
+          question.reload
+          expect(question.body).to eq question.body
+        end
+
+        it 'renders template update' do
+          expect(response).to render_template 'update'
+        end
+      end
+    end      
+
+    context 'not author user' do
+      sign_in_user
+      before { update_action }
       
-      it 'doesnt change question attributes' do
+      it 'does not update question from not author' do
         question.reload
-        expect(question.title).to eq question.title
-        expect(question.body).to eq question.body
+        expect(question.body).to eq 'MyText'
+      end
+
+      it 'renders update js' do
+        expect(response).to render_template 'update'
+      end
+    end    
+
+    context 'not authenticated user' do
+      before { update_action }
+      
+      it 'does not update question' do
+        expect(question.body).to eq 'MyText'
       end
       
-      it 're-render edit view' do
-        expect(response).to render_template :edit
+      it 'response unauthorised' do
+        expect(response.status).to eq (401)
       end
-    end
+    end    
   end
   
   describe 'DELETE #delete' do

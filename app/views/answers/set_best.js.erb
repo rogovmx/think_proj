@@ -1,0 +1,5 @@
+<% if @answer.errors.any? %>
+  $('#errors').html("<%= j render 'questions/errors', resource: @answer %>" );
+<% else %>
+  $('.answers').html(" <%= j render @answers %>") 
+<% end %>  

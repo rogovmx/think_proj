@@ -1,13 +1,10 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_question, only: [:new, :create, :update, :destroy]
-  before_action :set_answer, only: [:update, :edit, :destroy]
+  before_action :set_question, only: [:new, :create]
+  before_action :set_answer, only: [:update, :edit, :destroy, :set_best]
 
   def new
     @answer = @question.answers.new
-  end
-
-  def edit
   end
 
   def create
@@ -17,23 +14,30 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to @question, notice: "Your answer have been successfully updated"
+    if current_user.author_of?(@answer)
+      @answer.update(answer_params)
     else
-      render 'questions/show'
+      @answer.errors.add(:base, message: "Cant edit answer if not author")
     end
   end
 
   def destroy
     if current_user.author_of?(@answer)
      @answer.destroy
-     flash[:notice] = "Answer deleted"
     else 
-     flash[:alert] = "No access to delete this answer"
+     @answer.errors.add(:base, message: "Cant delete answer if not author")
     end
-    redirect_to @question
   end
 
+  def set_best
+    if current_user.author_of?(@answer.question)
+      @answer.set_best
+      @answers = @answer.question.answers.reload
+    else 
+      @answer.errors.add(:base, message: "Cant set best answer if not author")
+    end
+  end
+  
   private
 
   def set_answer

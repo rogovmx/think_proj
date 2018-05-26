@@ -1,16 +1,22 @@
+#errors
 h1 Question
-h2 = @question.title
-p = @question.body
-p
-  - if current_user&.author_of?(@question)
-    = link_to 'Delete question', question_path(@question), method: :delete
+#question
+  h2 = @question.title
+  p.body = @question.body
+  p
+    - if current_user&.author_of?(@question)
+      = link_to 'Edit question', '#', id: 'edit-question-link', remote: true
+      = link_to 'Delete question', question_path(@question), method: :delete
+  = form_for @question, remote: true, html: { id: 'edit-question-form' } do |f|
+    = f.label :title, 'Edit your question title:'
+    = f.text_field :title
+    = f.label :body, 'Edit your question:'
+    = f.text_area :body
+    = f.submit 'Save'
 
 h1 Answers
 .answers = render @question.answers
 
 = render 'answers/answer_form', question: @question, answer: @answer || @question.answers.new
 
-p = link_to 'Questions', questions_path
 
-
-#errors

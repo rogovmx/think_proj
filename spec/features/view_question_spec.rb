@@ -1,11 +1,10 @@
-require 'rails_helper'
+require_relative 'features_helper'
 
 feature 'view question with answers', %q{
   One can view the question with answers.
   No matter logged in or not.
 } do
   given(:user) { create(:user) }
-  
   given(:question) { create(:question_with_answers) }
   
   scenario 'logged in user views the question' do
