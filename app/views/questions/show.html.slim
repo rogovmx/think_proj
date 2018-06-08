@@ -1,22 +1,31 @@
 #errors
-h1 Question
+h1 
+  | Question #{@question.user.email}
 #question
   h2 = @question.title
   p.body = @question.body
+  ul.question_attachments(id="question-#{@question.id}-attachments")
+    == render @question.attachments
   p
     - if current_user&.author_of?(@question)
       = link_to 'Edit question', '#', id: 'edit-question-link', remote: true
       = link_to 'Delete question', question_path(@question), method: :delete
   = form_for @question, remote: true, html: { id: 'edit-question-form' } do |f|
-    = f.label :title, 'Edit your question title:'
-    = f.text_field :title
-    = f.label :body, 'Edit your question:'
-    = f.text_area :body
+    p
+      = f.label :title, 'Edit your question title:'
+      = f.text_field :title
+    p
+      = f.label :body, 'Edit your question:'
+      = f.text_area :body
+
+    == render 'attachments/attachments_form', resource: f
+
     = f.submit 'Save'
 
 h1 Answers
-.answers = render @question.answers
+hr
+.answers = render @answers
 
-= render 'answers/answer_form', question: @question, answer: @answer || @question.answers.new
+= render 'answers/answer_form', question: @question, answer: @answer
 
 

@@ -1,8 +1,13 @@
 = render 'errors', resource: @question
-= form_for @question do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
+= form_for @question, multipart: true do |f|
+  p
+    = f.label :title
+    = f.text_field :title
+  p
+    = f.label :body
+    = f.text_area :body
+
+  == render 'attachments/attachments_form', resource: f
+
   = f.submit 'Create question'
 

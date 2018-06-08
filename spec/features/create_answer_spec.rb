@@ -21,7 +21,6 @@ feature 'Create answer', %q{
   end
   
   scenario 'unauthenticated user tries to create the answer', js: true do
-#    question = create(:question)
     visit question_path(question)
     fill_in 'Answer:', with: 'My test answer'
     click_on 'Post your answer'

@@ -1,0 +1,4 @@
+#attachments
+  = resource.fields_for :attachments do |a|
+    == render 'attachments/attachment_fields', f: a
+  = link_to_add_association 'Add attachment', resource, :attachments, partial: 'attachments/attachment_fields' 
