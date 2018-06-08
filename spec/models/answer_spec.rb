@@ -11,15 +11,15 @@ RSpec.describe Answer, type: :model do
     let(:answer2) { question.answers[2] }
 
     context 'best answer is not set' do
-      it { expect(answer1.best?).to eq false }
-      it { expect(answer2.best?).to eq false }
+      it { expect(answer1).to_not be_best }
+      it { expect(answer2).to_not be_best }
     end
 
     context 'best answer set' do
       before { answer1.set_best }
       
-      it { expect(answer1.best?).to eq true }
-      it { expect(answer2.best?).to eq false }
+      it { expect(answer1).to be_best }
+      it { expect(answer2).to_not be_best }
     end
 
     context 'best answer change' do
@@ -30,8 +30,8 @@ RSpec.describe Answer, type: :model do
         answer2.reload
       end
       
-      it { expect(answer1.best?).to eq false }
-      it { expect(answer2.best?).to eq true }
+      it { expect(answer1).to_not be_best }
+      it { expect(answer2).to be_best }
     end
   end  
   

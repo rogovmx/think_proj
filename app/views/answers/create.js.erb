@@ -3,6 +3,6 @@
 <% else %>
   $('#errors').html('');
   $('.answers').append('<%= j render @answer %>');
-  
   $('#new_answer #answer_body').val('');
 <% end %>
+$('.notice').html("<%= flash[:notice] %>");

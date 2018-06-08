@@ -1,4 +1,4 @@
-<% if @question.errors.any? %>
+<% if @question.errors.any?%>
   $('#errors').html("<%= j render 'errors', resource: @question %>")
 <% else %>
   $('#errors').html('')
@@ -7,3 +7,4 @@
   $('#question h2').text('<%= @question.title %>')
   $('#question p.body').text('<%= @question.body %>')
 <% end %> 
+$('.notice').html("<%= flash[:notice] %>");

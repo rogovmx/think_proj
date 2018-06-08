@@ -1,4 +1,4 @@
-<% if @answer.errors.any? %>
+<% if @answer.errors.any?%>
   $('#errors').html("<%= j render 'questions/errors', resource: @answer %>" );
 <% else %>
   $('#errors').html('');
@@ -7,3 +7,4 @@
   $('*[data-answer-id="'+answer_id+'"]').show();
   $('#answer-' + answer_id).children('.answer-body').text('<%= j @answer.body %>');
 <% end %>
+$('.notice').html("<%= flash[:notice] %>");

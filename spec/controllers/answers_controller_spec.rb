@@ -46,7 +46,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'with valid attributes' do
       before do
         sign_in answer.user
-        patch :update, params: { question_id: question, id: answer, answer: { body: 'updated body' }, format: :js }
+        patch :update, params: { id: answer, answer: { body: 'updated body' }, format: :js }
       end
 
       it 'assign the answer' do 
@@ -65,7 +65,7 @@ RSpec.describe AnswersController, type: :controller do
     
     context 'update request from not author' do
       it 'not saves answer' do
-        patch :update, params: { question_id: answer.question.id, id: answer, answer: { body: 'Custom not factored answer' }, format: :js }
+        patch :update, params: { id: answer, answer: { body: 'Custom not factored answer' }, format: :js }
         answer.reload
         expect(answer.body).to eq answer.body
       end
@@ -73,7 +73,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       before do
-        patch :update, params: { question_id: question, id: answer, answer: { body: nil }, format: :js }
+        patch :update, params: { id: answer, answer: { body: nil }, format: :js }
       end
 
       it 'doesnt update answer' do
@@ -90,7 +90,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'DELETE #delete' do
     before { answer }
     
-    let(:delete_action) { delete :destroy, params: { question_id: answer.question.id, id: answer }, format: :js}
+    let(:delete_action) { delete :destroy, params: { id: answer }, format: :js}
     
     context 'deletes if request from the author' do 
       before { sign_in answer.user }

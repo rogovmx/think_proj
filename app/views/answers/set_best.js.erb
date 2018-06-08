@@ -3,3 +3,4 @@
 <% else %>
   $('.answers').html(" <%= j render @answers %>") 
 <% end %>  
+$('.notice').html("<%= flash[:notice] %>");

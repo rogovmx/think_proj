@@ -9,7 +9,7 @@ class Answer < ApplicationRecord
   def set_best
     transaction do
       question.answers.where(best: true).update_all(best: false)
-      self.update_attribute(:best, true)
+      self.update!(best: true)
     end
   end
   

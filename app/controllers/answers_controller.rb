@@ -17,7 +17,7 @@ class AnswersController < ApplicationController
     if current_user.author_of?(@answer)
       @answer.update(answer_params)
     else
-      @answer.errors.add(:base, message: "Cant edit answer if not author")
+      flash.now[:notice] = "Cant edit answer if not author"
     end
   end
 
@@ -25,7 +25,7 @@ class AnswersController < ApplicationController
     if current_user.author_of?(@answer)
      @answer.destroy
     else 
-     @answer.errors.add(:base, message: "Cant delete answer if not author")
+     flash.now[:notice] = "Cant delete answer if not author"
     end
   end
 
@@ -34,7 +34,7 @@ class AnswersController < ApplicationController
       @answer.set_best
       @answers = @answer.question.answers.reload
     else 
-      @answer.errors.add(:base, message: "Cant set best answer if not author")
+      flash.now[:notice] = "Cant set best answer if not author"
     end
   end
   
