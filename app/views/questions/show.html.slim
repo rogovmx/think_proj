@@ -1,30 +1,32 @@
 #errors
-h1 
-  | Question #{@question.user.email}
-#question
-  h2 = @question.title
-  p.body = @question.body
-  ul.question_attachments(id="question-#{@question.id}-attachments")
-    == render @question.attachments
-  p
-    - if current_user&.author_of?(@question)
-      = link_to 'Edit question', '#', id: 'edit-question-link', remote: true
-      = link_to 'Delete question', question_path(@question), method: :delete
-  = form_for @question, remote: true, html: { id: 'edit-question-form' } do |f|
+#question.card
+  .card-header
+    h1 
+      | Question #{@question.user.email}
+  .card-body    
+    h2.card-title = @question.title
+    p.body = @question.body
+    ul.question_attachments(id="question-#{@question.id}-attachments")
+      == render @question.attachments
     p
-      = f.label :title, 'Edit your question title:'
-      = f.text_field :title
-    p
-      = f.label :body, 'Edit your question:'
-      = f.text_area :body
+      - if current_user&.author_of?(@question)
+        = link_to 'Edit question', '#', id: 'edit-question-link', remote: true
+        = link_to 'Delete question', question_path(@question), method: :delete
+    = form_for @question, remote: true, html: { id: 'edit-question-form' } do |f|
+      p
+        = f.label :title, 'Edit your question title:'
+        = f.text_field :title
+      p
+        = f.label :body, 'Edit your question:'
+        = f.text_area :body
 
-    == render 'attachments/attachments_form', resource: f
+      == render 'attachments/attachments_form', resource: f
 
-    = f.submit 'Save'
+      = f.submit 'Save', class: 'btn btn-primary'
+.card
+  h1.card-header Answers
 
-h1 Answers
-hr
-.answers = render @answers
+  .answers.card-body = render @answers
 
 = render 'answers/answer_form', question: @question, answer: @answer
 
