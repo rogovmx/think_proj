@@ -1,8 +1,8 @@
 = render 'questions/errors', resource: answer
 h3 Create answer
 = form_for [question, answer], remote: true do |f|
-  = f.label :body, 'Answer:'
-  br
-  = f.text_area :body
-  br
+  p
+    = f.label :body, 'Answer:'
+    = f.text_area :body
+  == render 'attachments/attachments_form', resource: f
   = f.submit 'Post your answer'

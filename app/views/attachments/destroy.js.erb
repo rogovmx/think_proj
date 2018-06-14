@@ -1,0 +1,2 @@
+attachable = '<%= "#{@attachment.attachable.class.name.underscore}-#{@attachment.attachable.id}-attachments" %>';
+$('#' + attachable).html('<ul>' + ' <%= j render @attachment.attachable.attachments %>');

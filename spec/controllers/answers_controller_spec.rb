@@ -26,7 +26,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'associates current user with answer' do
         valid_answer_action
         expect(assigns(:answer).user_id).to eq @user.id
-      end    
+      end
     end
 
     context 'with invalid attributes' do

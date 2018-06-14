@@ -6,5 +6,6 @@
   $('#edit-question-link').show();
   $('#question h2').text('<%= @question.title %>')
   $('#question p.body').text('<%= @question.body %>')
+  $('#question .question_attachments').html('<%= j render @question.attachments.reload %>');
 <% end %> 
 $('.notice').html("<%= flash[:notice] %>");

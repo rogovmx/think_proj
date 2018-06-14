@@ -6,5 +6,6 @@
   $('form#edit-answer-form-' + answer_id).hide();
   $('*[data-answer-id="'+answer_id+'"]').show();
   $('#answer-' + answer_id).children('.answer-body').text('<%= j @answer.body %>');
+  $('#answer-' + answer_id).children('.answer_attachments').html('<%= j render @answer.attachments %>');
 <% end %>
 $('.notice').html("<%= flash[:notice] %>");
