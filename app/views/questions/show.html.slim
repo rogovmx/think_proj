@@ -4,6 +4,13 @@
     h1 
       | Question #{@question.user.email}
   .card-body    
+    .question-rating
+      span id="question-#{@question.id}-rating"
+        =<> @question.rating
+      - if logged_in?
+        = link_to '-', vote_question_path(@question, value: -1), method: :patch, remote: true, data: { type: :json } 
+        = link_to '+', vote_question_path(@question, value: 1), method: :patch, remote: true, data: { type: :json }
+
     h2.card-title = @question.title
     p.body = @question.body
     ul.question_attachments(id="question-#{@question.id}-attachments")

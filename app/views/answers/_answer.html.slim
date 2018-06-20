@@ -5,12 +5,19 @@
     p.answer-body = answer.body
     ul.answer_attachments(id="answer-#{answer.id}-attachments")
       == render answer.attachments
+    .answer-rating
+      span id="answer-#{answer.id}-rating"
+        =<> answer.rating
+      - if logged_in?
+        = link_to '-', vote_answer_path(answer, value: -1), method: :patch, remote: true, data: { type: :json } 
+        = link_to '+', vote_answer_path(answer, value: 1), method: :patch, remote: true, data: { type: :json }
+
     - if current_user&.author_of?(answer.question) && !answer.best
       = link_to 'set best', set_best_answer_path(answer), method: :patch, id: 'select-as-best-link', remote: true
     - if current_user&.author_of?(answer)
       = link_to 'Delete answer', answer, method: :delete, remote: true
       = link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      
+
       = form_for answer, remote: true, html: { id: "edit-answer-form-#{answer.id}"} do |f|
         p 
           = f.label :body, 'Edit your answer:'

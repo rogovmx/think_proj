@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
+  include Votes
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:show, :edit, :update, :destroy]
+  before_action :load_question, only: [:show, :edit, :update, :destroy, :vote]
   
   def index
     @questions = Question.all 
@@ -50,7 +51,7 @@ class QuestionsController < ApplicationController
   end
   
   def question_params
-    params.require(:question).permit(:title, :body, attachments_attributes: [:file, :_destroy, :id])
+    params.require(:question).permit(:value, :title, :body, attachments_attributes: [:file, :_destroy, :id])
   end
   
 end

@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.configure do |config|
+  config.after do |example|
+    if example.metadata[:type] == :feature and example.exception.present?
+      save_and_open_page
+    end
+  end  
+  
 #  Capybara.javascript_driver = :webkit
 
   config.use_transactional_fixtures = false  
